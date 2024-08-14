@@ -4,16 +4,17 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-iced = { git = "https://github.com/iced-rs/iced", rev = "169667ef1b4fa754ed1edb5fa0e845aede2638fb", features = ["debug", "highlighter", "tokio"]}
+iced = { git = "https://github.com/iced-rs/iced", rev = "8b45d620d048c33febbead4480d9ef62f196c9e1", features = ["debug", "highlighter", "tokio", "lazy"]}
+tree-sitter = "0.22"
+tree-sitter-rust = "0.21"
 
+[build-dependencies]
+cc="*"
 
 [lib]
-name = "lneutrino"
-path = "src/lib.rs"
-
-[[bin]]
 name = "neutrino"
-path = "src/main.rs"
+path = "src/lib.rs"
+crate-type = ["cdylib"]
 
 [profile.dev]
 opt-level = 1

@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 iced = { git = "https://github.com/iced-rs/iced", rev = "8b45d620d048c33febbead4480d9ef62f196c9e1", features = ["debug", "highlighter", "tokio", "lazy"]}
+lazy_static = "1.5.0"
 tree-sitter = "0.22"
 tree-sitter-rust = "0.21"
 

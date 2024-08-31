@@ -1,6 +1,4 @@
-use lazy_static::lazy_static;
 use std::ffi::c_void;
-use std::sync::Mutex;
 
 type Ptr = *const c_void;
 type VoidFn = unsafe extern "C" fn();
@@ -21,38 +19,33 @@ pub extern "C" fn invoke(scheme_cb: Ptr) {
 // Define the Buffer struct
 pub struct Buffer {
     data: Vec<u8>,
+    _marker: std::marker::PhantomPinned,
 }
 
-// Global vector to maintain buffers
-lazy_static! {
-    static ref BUFFERS: Mutex<Vec<Option<Buffer>>> = Mutex::new(Vec::new());
+impl Buffer {
+    fn new() -> Self {
+        Buffer {
+            data: Vec::new(),
+            _marker: std::marker::PhantomPinned,
+        }
+    }
 }
 
 // Function to create a buffer
 #[no_mangle]
-pub extern "C" fn create_buffer(size: usize) -> i32 {
-    let buffer = Buffer {
-        data: vec![0; size],
-    };
-
-    let mut buffers = BUFFERS.lock().unwrap();
-    let id = buffers.len() as i32;
-    buffers.push(Some(buffer));
-    id
+pub extern "C" fn create_buffer() -> Ptr {
+    println!("create_buffer called in rust!");
+    let buffer = Box::new(Buffer::new());
+    Box::into_raw(buffer) as Ptr
 }
 
 // Function to destroy a buffer
 #[no_mangle]
-pub extern "C" fn destroy_buffer(id: i32) -> bool {
-    let mut buffers = BUFFERS.lock().unwrap();
-    if id < 0 || id as usize >= buffers.len() {
-        return false;
-    }
-
-    if buffers[id as usize].is_some() {
-        buffers[id as usize] = None;
-        true
-    } else {
-        false
+pub extern "C" fn destroy_buffer(ptr: Ptr) {
+    println!("destroy_buffer called in rust!");
+    if !ptr.is_null() {
+        unsafe {
+            let _ = Box::from_raw(ptr as *mut Buffer);
+        }
     }
 }

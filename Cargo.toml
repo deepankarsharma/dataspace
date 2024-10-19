@@ -4,18 +4,19 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-iced = { git = "https://github.com/iced-rs/iced", rev = "8b45d620d048c33febbead4480d9ef62f196c9e1", features = ["debug", "highlighter", "tokio", "lazy"]}
+chrono = "0.4.38"
+iced = {version="0.13.1", features = ["debug", "highlighter", "tokio", "lazy", "canvas"]}
 lazy_static = "1.5.0"
-tree-sitter = "0.22"
-tree-sitter-rust = "0.21"
+rand = "0.8.5"
+tracing-subscriber = "0.3.18"
 
 [build-dependencies]
 cc="*"
 
-[lib]
+[[bin]]
 name = "neutrino"
-path = "src/lib.rs"
-crate-type = ["cdylib"]
+path = "src/main.rs"
+#crate-type = ["cdylib"]
 
 [profile.dev]
 opt-level = 1
